@@ -57,4 +57,11 @@ public class UserInfoController {
     ) throws RESTException {
         return userInfoService.getUserInfo(id);
     }
+
+    @DeleteMapping("/delete")
+    public String deleteUserInfo(
+            @RequestParam("id") int id
+    ) throws RESTException {
+        return userInfoService.deleteUserInfo(id);
+    }
 }

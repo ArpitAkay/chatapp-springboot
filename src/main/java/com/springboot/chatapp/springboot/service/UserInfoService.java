@@ -29,4 +29,8 @@ public interface UserInfoService {
     UserInfo getUserInfo(
             int id
     ) throws RESTException;
+
+    String deleteUserInfo(
+            int id
+    ) throws RESTException;
 }

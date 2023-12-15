@@ -147,4 +147,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoRepository.findById(id)
                 .orElseThrow(() -> new RESTException(USER_NOT_FOUND));
     }
+
+    @Override
+    public String deleteUserInfo(
+            int id
+    ) throws RESTException {
+        UserInfo userInfo = userInfoRepository.findById(id)
+                .orElseThrow(() -> new RESTException(USER_NOT_FOUND));
+        userInfoRepository.delete(userInfo);
+        return "User deleted successfully";
+    }
 }
