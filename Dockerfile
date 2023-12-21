@@ -16,7 +16,7 @@ VOLUME /var/lib/mysql
 CMD ["mysqld"]
 
 # Stage 3: Create a minimal JRE image and copy the JAR file
-FROM openjdk:17-jre-slim AS app
+FROM openjdk:21-jdk-slim AS app
 WORKDIR /chatapp
 COPY --from=build /chatapp/target/chatapp-springboot-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
