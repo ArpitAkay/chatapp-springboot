@@ -1,5 +1,5 @@
 # Stage 1: Build the Spring Boot application
-FROM openjdk:17-jdk-slim AS build
+FROM openjdk:21-jdk-slim AS build
 WORKDIR /chatapp
 COPY . /chatapp
 RUN ./mvnw clean package
