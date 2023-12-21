@@ -3,6 +3,7 @@ package com.springboot.chatapp.springboot.service;
 import com.springboot.chatapp.springboot.entity.UserInfo;
 import com.springboot.chatapp.springboot.exception.RESTException;
 import com.springboot.chatapp.springboot.model.UserInfoReponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -32,5 +33,10 @@ public interface UserInfoService {
 
     String deleteUserInfo(
             int id
+    ) throws RESTException;
+
+    UserInfo uploadProfile(
+            int id,
+            MultipartFile multipartFile
     ) throws RESTException;
 }

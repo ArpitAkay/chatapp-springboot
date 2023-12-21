@@ -10,6 +10,7 @@ import lombok.*;
 public class UserInfoReponse {
     private int id;
     private String name;
+    private String profileImageUrl;
     private String latestMessage;
     private String latestMessageTime;
 }

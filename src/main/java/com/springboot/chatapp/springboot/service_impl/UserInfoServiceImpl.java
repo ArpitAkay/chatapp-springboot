@@ -6,6 +6,7 @@ import com.springboot.chatapp.springboot.exception.RESTException;
 import com.springboot.chatapp.springboot.model.UserInfoReponse;
 import com.springboot.chatapp.springboot.repository.UserInfoRepository;
 import com.springboot.chatapp.springboot.service.UserInfoService;
+import com.springboot.chatapp.springboot.util.S3Util;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -16,6 +17,7 @@ import jakarta.persistence.criteria.Root;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -27,15 +29,17 @@ public class UserInfoServiceImpl implements UserInfoService {
     private static final String USER_NOT_FOUND = "User not found";
     private final UserInfoRepository userInfoRepository;
     private final ModelMapper modelMapper;
+    private final S3Util s3Util;
     @PersistenceContext
     private EntityManager entityManager;
 
     public UserInfoServiceImpl(
             UserInfoRepository userInfoRepository,
-            ModelMapper modelMapper
-    ) {
+            ModelMapper modelMapper,
+            S3Util s3Util) {
         this.userInfoRepository = userInfoRepository;
         this.modelMapper = modelMapper;
+        this.s3Util = s3Util;
     }
 
     @Override
@@ -63,7 +67,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         List<UserInfo> userInfoList = userInfoRepository.findAll();
 
         userInfoList.remove(userInfoInDb);
-
 
         List<UserInfoReponse> userInfoReponseList =
                 userInfoList.stream().map(userInfo -> modelMapper.map(userInfo, UserInfoReponse.class)).toList();
@@ -156,5 +159,21 @@ public class UserInfoServiceImpl implements UserInfoService {
                 .orElseThrow(() -> new RESTException(USER_NOT_FOUND));
         userInfoRepository.delete(userInfo);
         return "User deleted successfully";
+    }
+
+    @Override
+    public UserInfo uploadProfile(int id, MultipartFile multipartFile) throws RESTException {
+        UserInfo userInfo = userInfoRepository.findById(id)
+                .orElseThrow(() -> new RESTException(USER_NOT_FOUND));
+
+        if(userInfo.getProfileImageName() != null && !userInfo.getProfileImageName().isEmpty()) {
+            s3Util.deleteFileInS3Bucket(userInfo.getProfileImageName());
+        }
+
+        String fileName = s3Util.uploadFileToS3Bucket(multipartFile);
+
+        userInfo.setProfileImageName(fileName);
+        userInfo.setProfileImageUrl(s3Util.getImageUrlFromS3(fileName));
+        return userInfoRepository.save(userInfo);
     }
 }

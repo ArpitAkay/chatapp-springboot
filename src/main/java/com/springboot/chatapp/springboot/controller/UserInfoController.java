@@ -5,6 +5,7 @@ import com.springboot.chatapp.springboot.exception.RESTException;
 import com.springboot.chatapp.springboot.model.UserInfoReponse;
 import com.springboot.chatapp.springboot.service.UserInfoService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -63,5 +64,13 @@ public class UserInfoController {
             @RequestParam("id") int id
     ) throws RESTException {
         return userInfoService.deleteUserInfo(id);
+    }
+
+    @PostMapping("/upload/profile")
+    public UserInfo uploadProfile(
+            @RequestParam("id") int id,
+            @RequestParam("profileImage") MultipartFile multipartFile
+            ) throws RESTException {
+        return userInfoService.uploadProfile(id, multipartFile);
     }
 }

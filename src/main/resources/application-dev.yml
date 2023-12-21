@@ -15,3 +15,22 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIASYRQWHADVEENPT54
+      secretKey: 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
+    region:
+      static: ap-south-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: chatapp-profileimages
+
