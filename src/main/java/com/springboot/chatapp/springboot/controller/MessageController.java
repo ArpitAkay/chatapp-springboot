@@ -1,11 +1,10 @@
 package com.springboot.chatapp.springboot.controller;
 
+import com.springboot.chatapp.springboot.entity.Message;
+import com.springboot.chatapp.springboot.exception.RESTException;
 import com.springboot.chatapp.springboot.model.PrivateChatResponse;
 import com.springboot.chatapp.springboot.service.MessageService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/message")
@@ -28,4 +27,22 @@ public class MessageController {
     ) {
         return messageService.getPrivateChatMessages(pageNo, pageSize, senderId, receiverId);
     }
+
+    @PutMapping("/update")
+    public Message updateMessage(
+            @RequestParam("id") int id,
+            @RequestParam("content") String content,
+            @RequestParam("editedTimestamp") String editedTimestamp
+    ) throws RESTException {
+        return messageService.updateMessage(id, content, editedTimestamp);
+    }
+
+
+    @DeleteMapping("/delete")
+    public String deleteMessage(
+            @RequestParam("id") int id
+    ) throws RESTException {
+        return messageService.deleteMessage(id);
+    }
+
 }

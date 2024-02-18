@@ -2,6 +2,7 @@ package com.springboot.chatapp.springboot.service_impl;
 
 import com.springboot.chatapp.springboot.entity.ConversationThreads;
 import com.springboot.chatapp.springboot.entity.Message;
+import com.springboot.chatapp.springboot.exception.RESTException;
 import com.springboot.chatapp.springboot.model.PrivateChatResponse;
 import com.springboot.chatapp.springboot.repository.ConversationThreadsRepository;
 import com.springboot.chatapp.springboot.repository.MessageRepository;
@@ -77,5 +78,26 @@ public class MessageServiceImpl implements MessageService {
         privateChatResponse.setPageNo(messagesPage.getNumber());
         privateChatResponse.setPageSize(messagesPage.getSize());
         return privateChatResponse;
+    }
+
+    @Override
+    public Message updateMessage(
+            int id,
+            String content,
+            String editedTimestamp
+    ) throws RESTException {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RESTException("Message not found"));
+        message.setContent(content);
+        message.setEditedTimestamp(editedTimestamp);
+        return messageRepository.save(message);
+    }
+
+    @Override
+    public String deleteMessage(int id) throws RESTException {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RESTException("Message not found"));
+        messageRepository.delete(message);
+        return "Message deleted successfully";
     }
 }

@@ -21,4 +21,5 @@ public class Message {
     private int receiverId;
     private String receiverName;
     private String timestamp;
+    private String editedTimestamp;
 }
